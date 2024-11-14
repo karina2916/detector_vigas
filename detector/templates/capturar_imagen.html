@@ -1,0 +1,31 @@
+<!-- templates/calculos_vigas/cargar_imagen.html -->
+{% load static %}
+<link href="{% static 'css/capturar_imagen.css' %}" rel="stylesheet" />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cargar Imagen</title>
+</head>
+<body>
+    <h1>Cargar una Imagen</h1>
+
+    <form id="cargarImagenForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <!-- Selector para elegir entre ingreso por voz o manual -->
+        <label for="metodoIngreso">Selecciona el método de ingreso de datos:</label>
+        <select id="metodoIngreso" name="metodo_ingreso">
+            <option value="manual">Ingreso Manual</option>
+            <option value="voz">Ingreso por Voz</option>
+        </select>
+
+        <button type="submit">Cargar Imagen</button>
+    </form>
+
+    <script>
+        
+    </script>
+</body>
+</html>

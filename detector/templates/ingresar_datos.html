@@ -1,0 +1,96 @@
+<!-- templates/ingresar_datos.html -->
+{% load static %}
+<link href="{% static 'css/ingresar_datos.css' %}" rel="stylesheet" />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingresar Datos de la Viga</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importar jQuery -->
+    <style>
+        /* Estilo para ocultar elementos */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ingresar Datos de la Viga</h1>
+    
+        {% if ruta_imagen %}
+            <h3>Imagen Cargada:</h3>
+            <img src="{% static 'vigas_datos/' %}{{ ruta_imagen }}" alt="Imagen de la viga" class="img-preview">
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {{ form.uso.label_tag }} {{ form.uso }}
+            {{ form.tipo_uso.label_tag }} {{ form.tipo_uso }}
+            {{ form.tipo_viga.label_tag }} {{ form.tipo_viga }}
+            
+            {{ form.longitud.label_tag }} {{ form.longitud }}
+            {{ form.base.label_tag }} {{ form.base }}
+            {{ form.peralte.label_tag }} {{ form.peralte }}
+            {{ form.peso_aligerado.label_tag }} {{ form.peso_aligerado }}
+    
+            <!-- Campo de longitud de viga perpendicular, siempre visible -->
+            {{ form.longitud_viga_perpendicular_1.label_tag }} {{ form.longitud_viga_perpendicular_1 }}
+    
+            <!-- Campo de longitud de viga perpendicular 2, oculto por defecto y solo visible para "Viga en medio" -->
+            <div id="longitud-viga-perpendicular-medio" class="hidden">
+                {{ form.longitud_viga_perpendicular_2.label_tag }} {{ form.longitud_viga_perpendicular_2 }}
+            </div>
+            
+            <button type="submit" class="btn-submit">Calcular</button>
+        </form>
+    
+        <!-- Botón para volver a subir otra imagen -->
+        <a href="{% url 'capturar_imagen' %}" class="btn-reupload">Volver a Subir Otra Imagen</a>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            // Función para mostrar/ocultar campo de longitud de viga perpendicular 2 según el tipo de viga
+            function toggleVigaFields() {
+                const tipoViga = $('#id_tipo_viga').val();
+                
+                // Mostrar el segundo campo solo si la viga es "medio"
+                if (tipoViga === 'medio') {
+                    $('#longitud-viga-perpendicular-medio').removeClass('hidden'); // Muestra el segundo campo
+                } else {
+                    $('#longitud-viga-perpendicular-medio').addClass('hidden'); // Oculta el segundo campo
+                }
+            }
+    
+            // Llamar a la función al cargar la página y al cambiar el valor de tipo_viga
+            toggleVigaFields();
+            $('#id_tipo_viga').change(toggleVigaFields);
+    
+            // AJAX para actualizar el campo de tipo_uso según el uso seleccionado
+            $('#id_uso').change(function() {
+                var usoSeleccionado = $(this).val();
+                
+                $.ajax({
+                    url: '{% url "obtener_tipos_uso" %}',
+                    data: {
+                        'uso': usoSeleccionado
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_tipo_uso').empty();
+                        $.each(data, function(index, option) {
+                            $('#id_tipo_uso').append($('<option>', {
+                                value: option.value,
+                                text: option.label
+                            }));
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>

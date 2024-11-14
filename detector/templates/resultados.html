@@ -1,0 +1,44 @@
+{% load static %}
+<link href="{% static 'css/resultados.css' %}" rel="stylesheet" />
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados del Cálculo</title>
+    <style>
+        /* Estilos generales de la página */
+      
+    </style>
+</head>
+<body>
+    <div class="container">
+    <!-- Encabezado -->
+    <div class="header">CÁLCULOS Y GRÁFICAS</div>
+
+    <!-- Título de resultados -->
+    <h1>Resultados del Cálculo</h1>
+    
+    <!-- Resultados de las cargas -->
+    <p><strong>Total Dead Load:</strong> <span class="result">{{ carga_muerta_total }} kg</span></p>
+    <p><strong>live load:</strong> <span class="result">{{ carga_viva }} kg</span></p>
+    <p><strong>total load:</strong> <span class="result">{{ carga_total }} kg</span></p>
+
+    <!-- Representación de la viga -->
+    <h2>Representación de la Viga</h2>
+    <img src="data:image/png;base64,{{ viga_image }}" alt="Representación de la Viga">
+
+    <!-- Gráfico de DFC -->
+    <h2>Shear Force Diagram</h2>
+    <img src="data:image/png;base64,{{ dfc_image }}" alt="Diagrama de Fuerzas Cortantes">
+
+    <!-- Gráfico de DMF -->
+    <h2>Bending Moment Diagram</h2>
+    <img src="data:image/png;base64,{{ dmf_image }}" alt="Diagrama de Momentos Flectores">
+
+    <!-- Botón para hacer otro cálculo -->
+    <div class="button-container">
+        <a href="{% url 'ingresar_datos' %}" class="btn">Hacer Otro Cálculo</a>
+    </div>
+</div>
+</body>
+</html>
